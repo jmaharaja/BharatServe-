@@ -1,0 +1,12 @@
+/                           /public/index.html              200
+/index.html                 /public/index.html              200
+/login.html                 /public/login.html              200
+/register.html              /public/register.html           200
+/booking.html               /public/booking.html            200
+/dashboard-admin.html       /public/dashboard-admin.html    200
+/dashboard-customer.html    /public/dashboard-customer.html 200
+/dashboard-provider.html    /public/dashboard-provider.html 200
+/provider-listing.html      /public/provider-listing.html   200
+/css/*                      /public/css/:splat              200
+/js/*                       /public/js/:splat               200
+/img/*                      /public/img/:splat              200
