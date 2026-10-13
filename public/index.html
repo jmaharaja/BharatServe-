@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BharatServe - Trusted Professionals for Every Service Need</title>
+  <meta name="description" content="Book verified plumbers, electricians, cleaners, and network specialists for homes, offices, and shops across India. Transparent, rating-based recommendations.">
+  <link rel="icon" type="image/png" href="img/DP.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Offline / Mock Mode Banner -->
+  <div id="offline-banner" class="offline-banner"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">B</div>
+        Bharat<span>Serve</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-item active">Home</a></li>
+        <li><a href="#services" class="nav-item">Services</a></li>
+        <li><a href="#trust" class="nav-item">Why Us</a></li>
+        <li><a href="#reviews" class="nav-item">Testimonials</a></li>
+      </ul>
+      <div class="nav-auth" id="nav-auth">
+        <!-- Dynamically loaded via auth.js -->
+        <span style="color: var(--text-muted); font-size: 14px;"><i class="fas fa-spinner fa-spin"></i> Loading...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <span class="hero-tagline">Serving India, One Home at a Time</span>
+        <h1 class="hero-title">
+          <span>Trusted Professionals</span><br>for Every Service Need.
+        </h1>
+        <p class="hero-subtitle">
+          Book background-verified plumbers, AC mechanics, electricians, deep cleaners, and IT network setups for homes, offices, and shops.
+        </p>
+
+        <!-- Search Bar Component -->
+        <div class="search-wrapper">
+          <div class="search-field">
+            <i class="fas fa-tools"></i>
+            <select id="search-category">
+              <option value="">Select Service Category</option>
+              <optgroup label="Home Services">
+                <option value="Plumbing">Plumbing</option>
+                <option value="Electrician">Electrician</option>
+                <option value="AC Repair">AC Repair</option>
+                <option value="Solar Installation">Solar Installation</option>
+                <option value="Water Purification">Water Purification</option>
+                <option value="Borewell Services">Borewell Services</option>
+                <option value="Motor Repairs">Motor Repairs</option>
+                <option value="Gas Stove Repair">Gas Stove Repair</option>
+                <option value="Home Cleaning">Home Cleaning</option>
+                <option value="Carpenter">Carpenter</option>
+              </optgroup>
+              <optgroup label="Office Services">
+                <option value="Office Cleaning">Office Cleaning</option>
+                <option value="Network Setup">Network Setup</option>
+                <option value="CCTV Installation">CCTV Installation</option>
+              </optgroup>
+              <optgroup label="Shop Services">
+                <option value="Signboard Installation">Signboard Installation</option>
+                <option value="Security Systems">Security Systems</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="search-field">
+            <i class="fas fa-user-tie"></i>
+            <input type="text" id="search-provider-name" placeholder="Search provider or skill...">
+          </div>
+          <div class="search-field">
+            <i class="fas fa-location-dot"></i>
+            <select id="search-location">
+              <option value="">All Locations (India)</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Bangalore">Bangalore</option>
+              <option value="Delhi">Delhi</option>
+            </select>
+          </div>
+          <button id="btn-search-hero" class="btn btn-primary">
+            <i class="fas fa-magnifying-glass"></i> Search
+          </button>
+        </div>
+
+        <div class="hero-cta">
+          <a href="provider-listing.html" class="btn btn-secondary">Book a Service</a>
+          <a href="register.html?role=provider" class="btn btn-text">Become a Professional <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <!-- Hero Premium Graphics (CSS Illustrated Mockup) -->
+      <div class="hero-image-wrapper">
+        <div class="hero-circle-bg"></div>
+        <div class="illustration-card">
+          <div class="illustration-item">
+            <div class="illustration-icon ill-home">
+              <i class="fas fa-house-user"></i>
+            </div>
+            <div class="illustration-text">
+              <h4>Home Maintenance</h4>
+              <p>Plumbing, AC & Electrical Repairs</p>
+            </div>
+          </div>
+          <div class="illustration-item">
+            <div class="illustration-icon ill-office">
+              <i class="fas fa-building"></i>
+            </div>
+            <div class="illustration-text">
+              <h4>Office Infrastructure</h4>
+              <p>Network Setup & Deep Cleaning</p>
+            </div>
+          </div>
+          <div class="illustration-item">
+            <div class="illustration-icon ill-shop">
+              <i class="fas fa-store"></i>
+            </div>
+            <div class="illustration-text">
+              <h4>Shop Security & Brand</h4>
+              <p>Signboards & CCTV Systems</p>
+            </div>
+          </div>
+        </div>
+        <div class="hero-stats-badge">
+          <i class="fas fa-shield-halved"></i>
+          <div>
+            <h5>100% Verified</h5>
+            <p>Background Cleared Pros</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recommended Services Categories Section -->
+  <section class="section section-bg" id="services">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-title-tag">Top Booked Services</span>
+        <h2 class="section-title">Explore Verified Services</h2>
+        <p class="section-subtitle">Select a category below to browse high-performing professionals filtered by customer satisfaction rates.</p>
+      </div>
+
+      <!-- Categories Tabs -->
+      <div class="category-tabs">
+        <button class="category-tab active" data-category="Home Services">
+          <i class="fas fa-house"></i> Home Services
+        </button>
+        <button class="category-tab" data-category="Office Services">
+          <i class="fas fa-building-user"></i> Office Services
+        </button>
+        <button class="category-tab" data-category="Shop Services">
+          <i class="fas fa-shop"></i> Shop Services
+        </button>
+      </div>
+
+      <!-- Services Grid Container -->
+      <div class="services-grid" id="services-grid">
+        <!-- Dynamically rendered services -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust and Safety Badges -->
+  <section class="section" id="trust">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-title-tag">BharatServe Assurance</span>
+        <h2 class="section-title">Your Trust, Our Priority</h2>
+        <p class="section-subtitle">Unlike other booking websites, we do not sell higher rankings. Recommendation scores are purely quality-driven.</p>
+      </div>
+
+      <div class="trust-grid">
+        <div class="trust-card">
+          <div class="trust-icon"><i class="fas fa-user-check"></i></div>
+          <h3>Verified Professionals</h3>
+          <p>Every provider passes background verification checks and physical credential audits.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><i class="fas fa-chart-line"></i></div>
+          <h3>Satisfaction-Based Listing</h3>
+          <p>Our recommendation engine works on customer feedback, response speeds, and repeat ratings.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><i class="fas fa-shield-heart"></i></div>
+          <h3>Customer Protection</h3>
+          <p>We guarantee work satisfaction. Coverage covers disputes and secure booking escrows.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><i class="fas fa-headset"></i></div>
+          <h3>24/7 Helpline</h3>
+          <p>Dedicated customer support ready to answer booking details and emergency breakdowns.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials & Reviews Feed -->
+  <section class="section section-bg" id="reviews">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-title-tag">Genuine Customer Feedback</span>
+        <h2 class="section-title">Verified Reviews from Home Bookings</h2>
+        <p class="section-subtitle">Real customer feedback associated with completed service tokens. Zero anonymous reviews.</p>
+      </div>
+
+      <div class="reviews-feed" id="homepage-reviews">
+        <!-- Dynamically loaded reviews -->
+        <div style="text-align:center; padding: 20px; color: var(--text-muted);">
+          <i class="fas fa-circle-notch fa-spin"></i> Loading customer reviews...
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <a href="index.html" class="logo" style="color: white; margin-bottom: 20px;">
+          <div class="logo-icon">B</div>
+          Bhart<span style="color: var(--secondary-orange);">Serve</span>
+        </a>
+        <p>Serving India, One Home at a Time. The most transparent and trustworthy professional marketplace on the continent.</p>
+        <div class="footer-socials">
+          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h3>Popular Categories</h3>
+        <ul class="footer-links">
+          <li><a href="provider-listing.html?subCategory=Plumbing">Plumbing Services</a></li>
+          <li><a href="provider-listing.html?subCategory=AC Repair">AC Repair & Service</a></li>
+          <li><a href="provider-listing.html?subCategory=Electrician">Electrical Inspections</a></li>
+          <li><a href="provider-listing.html?subCategory=Home Cleaning">Home Deep Cleaning</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Company</h3>
+        <ul class="footer-links">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms & Conditions</a></li>
+          <li><a href="#">Help Center</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 BharatServe Private Limited. All Rights Reserved. Made in India for the World.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js?v=2"></script>
+  <script src="js/auth.js?v=2"></script>
+  <script src="js/app.js?v=2"></script>
+</body>
+</html>

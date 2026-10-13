@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - BharatServe</title>
+  <link rel="icon" type="image/png" href="img/DP.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .auth-page {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px;
+      min-height: calc(100vh - 160px);
+      background: radial-gradient(circle at 90% 10%, rgba(249, 115, 22, 0.03) 0%, rgba(15, 23, 42, 0.03) 100%);
+    }
+    .auth-card {
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-lg);
+      padding: 40px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: var(--shadow-premium);
+    }
+    .auth-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .auth-header h2 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .auth-error {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: var(--error-red);
+      padding: 12px;
+      border-radius: var(--border-radius-sm);
+      margin-bottom: 20px;
+      font-size: 14px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+    .role-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      background-color: var(--bg-soft-gray);
+      border-radius: var(--border-radius-sm);
+      padding: 6px;
+      margin-bottom: 24px;
+    }
+    .role-btn {
+      padding: 12px;
+      text-align: center;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      user-select: none;
+    }
+    .role-btn.active {
+      background-color: var(--primary-navy);
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+    .provider-details-section {
+      display: none;
+      border-top: 1px solid var(--border-color);
+      padding-top: 24px;
+      margin-top: 24px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 580px) {
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">B</div>
+        Bharat<span>Serve</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-item">Home</a></li>
+        <li><a href="index.html#services" class="nav-item">Services</a></li>
+        <li><a href="index.html#trust" class="nav-item">Why Us</a></li>
+        <li><a href="index.html#reviews" class="nav-item">Testimonials</a></li>
+      </ul>
+      <div class="nav-auth">
+        <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Registration Area -->
+  <main class="auth-page">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h2>Create Account</h2>
+        <p style="color: var(--text-muted); font-size: 14px;">Join BharatServe to hire or offer professional services</p>
+      </div>
+
+      <div id="auth-error" class="auth-error">
+        <i class="fas fa-triangle-exclamation"></i>
+        <span id="error-message">Registration failed.</span>
+      </div>
+
+      <!-- Role Selection -->
+      <div class="role-toggle">
+        <div class="role-btn active" id="role-customer-btn" onclick="selectRole('customer')">
+          <i class="fas fa-user"></i> Customer
+        </div>
+        <div class="role-btn" id="role-provider-btn" onclick="selectRole('provider')">
+          <i class="fas fa-toolbox"></i> Service Professional
+        </div>
+      </div>
+
+      <form id="register-form">
+        <!-- Common fields -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="reg-name">Full Name</label>
+            <input type="text" id="reg-name" class="form-control" placeholder="e.g. Rajesh Kumar" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-email">Email Address</label>
+            <input type="email" id="reg-email" class="form-control" placeholder="rajesh@gmail.com" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="reg-phone">Mobile Number</label>
+            <input type="tel" id="reg-phone" class="form-control" placeholder="e.g. 9876543210" pattern="[0-9]{10}" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-password">Password</label>
+            <input type="password" id="reg-password" class="form-control" placeholder="Min. 6 characters" minlength="6" required>
+          </div>
+        </div>
+
+        <!-- Professional specific fields -->
+        <div class="provider-details-section" id="provider-details">
+          <h3 style="font-size: 16px; margin-bottom: 20px; color: var(--secondary-orange); font-weight: 700;">Professional Profile Details</h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="prov-category">Primary Category</label>
+              <select id="prov-category" class="form-control" onchange="updateSubCategories()">
+                <option value="Home Services">Home Services</option>
+                <option value="Office Services">Office Services</option>
+                <option value="Shop Services">Shop Services</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="prov-sub-category">Specialized Service</label>
+              <select id="prov-sub-category" class="form-control">
+                <!-- Loaded dynamically -->
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="prov-experience">Years of Experience</label>
+              <input type="number" id="prov-experience" class="form-control" min="0" max="50" placeholder="e.g. 5">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="prov-price">Starting Price (₹)</label>
+              <input type="number" id="prov-price" class="form-control" min="99" placeholder="e.g. 299">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="prov-address">Service Area / City Location</label>
+            <input type="text" id="prov-address" class="form-control" placeholder="e.g. Andheri East, Mumbai">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="prov-bio">Short Professional Bio</label>
+            <textarea id="prov-bio" class="form-control" rows="3" placeholder="Tell customers about your skills and experience..."></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 24px; margin-bottom: 20px;">
+          Create Account <i class="fas fa-user-plus"></i>
+        </button>
+      </form>
+
+      <div style="text-align: center; font-size: 14px; color: var(--text-muted);">
+        Already have an account? <a href="login.html" class="btn-link">Sign In</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="padding: 40px 0 20px 0; border-top: none;">
+    <div class="container footer-bottom" style="padding-top: 0; border-top: none;">
+      <p>&copy; 2026 BharatServe Private Limited. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js?v=2"></script>
+  <script src="js/auth.js?v=2"></script>
+  <script>
+    let selectedRole = 'customer';
+
+    const subCategoriesMap = {
+      'Home Services': ['Plumbing', 'AC Repair', 'Electrician', 'Solar Installation', 'Water Purification', 'Borewell Services', 'Motor Repairs', 'Gas Stove Repair', 'Carpenter', 'Home Cleaning'],
+      'Office Services': ['Office Cleaning', 'Network Setup', 'CCTV Installation'],
+      'Shop Services': ['Signboard Installation', 'Security Systems']
+    };
+
+    // Auto-detect role if provider URL param is passed
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const role = urlParams.get('role');
+      if (role === 'provider') {
+        selectRole('provider');
+      }
+      updateSubCategories();
+    });
+
+    function selectRole(role) {
+      selectedRole = role;
+      
+      const custBtn = document.getElementById('role-customer-btn');
+      const provBtn = document.getElementById('role-provider-btn');
+      const provSec = document.getElementById('provider-details');
+
+      if (role === 'customer') {
+        custBtn.classList.add('active');
+        provBtn.classList.remove('active');
+        provSec.style.display = 'none';
+        
+        // Remove required attribute from provider inputs
+        document.getElementById('prov-experience').required = false;
+        document.getElementById('prov-price').required = false;
+        document.getElementById('prov-address').required = false;
+      } else {
+        custBtn.classList.remove('active');
+        provBtn.classList.add('active');
+        provSec.style.display = 'block';
+
+        // Add required attribute
+        document.getElementById('prov-experience').required = true;
+        document.getElementById('prov-price').required = true;
+        document.getElementById('prov-address').required = true;
+      }
+    }
+
+    function updateSubCategories() {
+      const category = document.getElementById('prov-category').value;
+      const subSelect = document.getElementById('prov-sub-category');
+      const subs = subCategoriesMap[category] || [];
+      
+      subSelect.innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('reg-name').value;
+      const email = document.getElementById('reg-email').value;
+      const phone = document.getElementById('reg-phone').value;
+      const password = document.getElementById('reg-password').value;
+
+      const errorDiv = document.getElementById('auth-error');
+      const errorMessage = document.getElementById('error-message');
+      errorDiv.style.display = 'none';
+
+      let providerDetails = null;
+
+      if (selectedRole === 'provider') {
+        providerDetails = {
+          category: document.getElementById('prov-category').value,
+          subCategory: document.getElementById('prov-sub-category').value,
+          experience: Number(document.getElementById('prov-experience').value),
+          startingPrice: Number(document.getElementById('prov-price').value),
+          address: document.getElementById('prov-address').value,
+          bio: document.getElementById('prov-bio').value
+        };
+      }
+
+      try {
+        const user = await Auth.register(name, email, password, phone, selectedRole, providerDetails);
+        
+        // Redirect to dashboard
+        if (user.role === 'customer') window.location.href = 'dashboard-customer.html';
+        if (user.role === 'provider') window.location.href = 'dashboard-provider.html';
+      } catch (err) {
+        errorDiv.style.display = 'flex';
+        errorMessage.innerText = err.error || err.message || (typeof err === 'string' ? err : JSON.stringify(err)) || 'Registration failed. Please check inputs.';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Providers - BharatServe</title>
+  <link rel="icon" type="image/png" href="img/DP.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Offline / Mock Mode Banner -->
+  <div id="offline-banner" class="offline-banner"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">B</div>
+        Bharat<span>Serve</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-item">Home</a></li>
+        <li><a href="index.html#services" class="nav-item">Services</a></li>
+        <li><a href="index.html#trust" class="nav-item">Why Us</a></li>
+        <li><a href="index.html#reviews" class="nav-item">Testimonials</a></li>
+      </ul>
+      <div class="nav-auth" id="nav-auth">
+        <span style="color: var(--text-muted); font-size: 14px;"><i class="fas fa-spinner fa-spin"></i> Loading...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Listings Layout -->
+  <main class="container" style="padding-bottom: 80px;">
+    <div class="listing-layout">
+      
+      <!-- Filters Sidebar -->
+      <aside class="filter-panel">
+        <div class="filter-section">
+          <div class="filter-title">Search Professional</div>
+          <div class="search-input-box">
+            <i class="fas fa-magnifying-glass"></i>
+            <input type="text" id="filter-search" placeholder="Skill, name, etc.">
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-title">Service Category</div>
+          <div class="filter-group">
+            <select id="filter-category" class="form-control" onchange="loadSubCategoryFilter()">
+              <option value="">All Categories</option>
+              <option value="Home Services">Home Services</option>
+              <option value="Office Services">Office Services</option>
+              <option value="Shop Services">Shop Services</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-title">Sub Service</div>
+          <div class="filter-group">
+            <select id="filter-sub-category" class="form-control">
+              <option value="">All Services</option>
+              <!-- Loaded dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-title">Location / City</div>
+          <div class="filter-group">
+            <select id="filter-location" class="form-control">
+              <option value="">All Cities</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Bangalore">Bangalore</option>
+              <option value="Delhi">Delhi</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-title">Trust & Safety Badges</div>
+          <div class="filter-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="filter-badge-verified"> Verified Badge
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="filter-badge-top-rated"> Top Rated Badge
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="filter-badge-fast"> Fast Response Badge
+            </label>
+          </div>
+        </div>
+
+        <button id="btn-apply-filters" class="btn btn-primary" style="width: 100%;">
+          <i class="fas fa-sliders"></i> Apply Filters
+        </button>
+      </aside>
+
+      <!-- Provider List Column -->
+      <section>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+          <div>
+            <h2 style="font-size: 24px; font-weight: 800;" id="results-count-title">Loading Professionals...</h2>
+            <p style="color: var(--text-muted); font-size: 14px;">Sorted by BharatServe Recommendation Score (Satisfied Customers First)</p>
+          </div>
+        </div>
+
+        <!-- Direct Choice Assurance Banner -->
+        <div style="background-color:rgba(16,185,129,0.05); border:1px solid rgba(16,185,129,0.2); border-radius:12px; padding:16px 20px; font-size:13px; color:var(--text-dark); margin-bottom:24px; display:flex; align-items:center; gap:12px; line-height:1.5;">
+          <i class="fas fa-user-gear" style="color:var(--success-green); font-size:20px;"></i>
+          <div>
+            <strong style="color:var(--primary-navy);">Direct Choice Platform:</strong> Select your preferred service professional below. BharatServe never auto-allocates technicians—you are in complete control of whom you invite to your home.
+          </div>
+        </div>
+
+        <div class="providers-list" id="providers-list">
+          <!-- Dynamically populated -->
+          <div style="text-align:center; padding: 60px; color: var(--text-muted);">
+            <i class="fas fa-circle-notch fa-spin fa-2x"></i>
+            <p style="margin-top: 10px;">Finding top recommended professionals...</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Provider Profile Details Modal -->
+  <div class="modal-overlay" id="profile-modal">
+    <div class="modal-content" style="max-width: 700px;">
+      <button class="modal-close" onclick="closeProfileModal()"><i class="fas fa-xmark"></i></button>
+      <div id="modal-profile-content">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-bottom" style="padding-top: 0; border-top: none;">
+      <p>&copy; 2026 BharatServe Private Limited. All Rights Reserved. Serving India, One Home at a Time.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js?v=2"></script>
+  <script src="js/auth.js?v=2"></script>
+  <script>
+    const subsMap = {
+      'Home Services': ['Plumbing', 'AC Repair', 'Electrician', 'Solar Installation', 'Water Purification', 'Borewell Services', 'Motor Repairs', 'Gas Stove Repair', 'Carpenter', 'Home Cleaning'],
+      'Office Services': ['Office Cleaning', 'Network Setup', 'CCTV Installation'],
+      'Shop Services': ['Signboard Installation', 'Security Systems']
+    };
+
+    let allProviders = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Wait for API to resolve mode
+      if (API.isMockMode === undefined) {
+        await API.init();
+      }
+
+      // Read URL query params
+      const urlParams = new URLSearchParams(window.location.search);
+      const category = urlParams.get('category');
+      const subCategory = urlParams.get('subCategory');
+      const search = urlParams.get('search');
+      const location = urlParams.get('location');
+
+      if (category) document.getElementById('filter-category').value = category;
+      loadSubCategoryFilter();
+      if (subCategory) document.getElementById('filter-sub-category').value = subCategory;
+      if (search) document.getElementById('filter-search').value = search;
+      if (location) document.getElementById('filter-location').value = location;
+
+      await fetchProviders();
+
+      // Listeners
+      document.getElementById('btn-apply-filters').addEventListener('click', () => {
+        fetchProviders();
+      });
+    });
+
+    function loadSubCategoryFilter() {
+      const category = document.getElementById('filter-category').value;
+      const subSelect = document.getElementById('filter-sub-category');
+      const subs = subsMap[category] || [];
+      
+      subSelect.innerHTML = '<option value="">All Services</option>' + 
+        subs.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+
+    async function fetchProviders() {
+      const category = document.getElementById('filter-category').value;
+      const subCategory = document.getElementById('filter-sub-category').value;
+      const search = document.getElementById('filter-search').value;
+      const location = document.getElementById('filter-location').value;
+      const verifyOnly = document.getElementById('filter-badge-verified').checked;
+      const topRatedOnly = document.getElementById('filter-badge-top-rated').checked;
+      const fastOnly = document.getElementById('filter-badge-fast').checked;
+
+      const listContainer = document.getElementById('providers-list');
+      listContainer.innerHTML = `
+        <div style="text-align:center; padding: 60px; color: var(--text-muted);">
+          <i class="fas fa-circle-notch fa-spin fa-2x"></i>
+          <p style="margin-top: 10px;">Filtering results...</p>
+        </div>
+      `;
+
+      try {
+        let endpoint = `/api/providers`;
+        let queryParams = [];
+        if (category) queryParams.push(`category=${encodeURIComponent(category)}`);
+        if (subCategory) queryParams.push(`subCategory=${encodeURIComponent(subCategory)}`);
+        if (search) queryParams.push(`search=${encodeURIComponent(search)}`);
+        if (location) queryParams.push(`location=${encodeURIComponent(location)}`);
+
+        if (queryParams.length > 0) {
+          endpoint += '?' + queryParams.join('&');
+        }
+
+        let providers = await API.request(endpoint);
+
+        // Apply badges client-side filter
+        if (verifyOnly) {
+          providers = providers.filter(p => p.providerProfile.isVerified);
+        }
+        if (topRatedOnly) {
+          providers = providers.filter(p => p.providerProfile.isTopRated);
+        }
+        if (fastOnly) {
+          providers = providers.filter(p => p.providerProfile.isFastResponse);
+        }
+
+        allProviders = providers;
+        renderProviders(providers);
+
+      } catch (err) {
+        console.error('Error fetching providers:', err);
+        listContainer.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--error-red); font-weight:600;">Failed to load service providers.</div>`;
+      }
+    }
+
+    function renderProviders(providers) {
+      const container = document.getElementById('providers-list');
+      const title = document.getElementById('results-count-title');
+      
+      title.innerText = `${providers.length} Professional${providers.length !== 1 ? 's' : ''} Available`;
+
+      if (providers.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding: 60px; background-color: white; border-radius: var(--border-radius-md); border: 1px solid var(--border-color);">
+            <i class="fas fa-circle-info fa-3x" style="color: var(--text-muted); margin-bottom: 20px;"></i>
+            <h3 style="font-size: 20px; font-weight:700;">No providers matched your criteria</h3>
+            <p style="color: var(--text-muted); font-size:14px; margin-top: 8px;">Try clearing filters or broadening search parameters.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = providers.map(p => {
+        const profile = p.providerProfile || {};
+        const initials = p.name.split(' ').map(n=>n[0]).join('').toUpperCase();
+        
+        // Badges builder
+        let badgesHtml = '';
+        if (profile.isVerified) badgesHtml += `<span class="badge badge-verified"><i class="fas fa-check-circle"></i> Verified</span>`;
+        if (profile.isBackgroundVerified) badgesHtml += `<span class="badge badge-bg-verified"><i class="fas fa-shield-check"></i> Background OK</span>`;
+        if (profile.isTopRated) badgesHtml += `<span class="badge badge-top-rated"><i class="fas fa-award"></i> Top Rated</span>`;
+        if (profile.isFastResponse) badgesHtml += `<span class="badge badge-fast-response"><i class="fas fa-bolt"></i> Fast Reply</span>`;
+
+        // Skills
+        const skillsHtml = profile.skills.map(s => `<span class="skill-tag">${s}</span>`).join('');
+
+        const bd = p.recommendationBreakdown || { ratingScore: 0, jobsScore: 0, responseScore: 0, repeatScore: 0, completenessScore: 0 };
+
+        return `
+          <div class="provider-card">
+            
+            <!-- Photo & Badges -->
+            <div class="provider-photo-area">
+              <div class="provider-avatar">${initials}</div>
+              <div class="provider-badges">${badgesHtml}</div>
+            </div>
+
+            <!-- Profile Info -->
+            <div class="provider-info-area">
+              <div class="provider-header">
+                <div class="provider-name-row">
+                  <h3 class="provider-name">${p.name}</h3>
+                  <span class="provider-category-tag">${profile.subCategory}</span>
+                </div>
+                <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+                  <i class="fas fa-briefcase"></i> ${profile.experience} Years Experience &nbsp;|&nbsp; 
+                  <i class="fas fa-language"></i> Speaks: ${profile.languages.join(', ')}
+                </div>
+              </div>
+              <p class="provider-bio">"${profile.bio || 'Verified service professional on BharatServe.'}"</p>
+              <div class="provider-skills">${skillsHtml}</div>
+              <div class="provider-meta-info">
+                <span><i class="fas fa-location-dot"></i> ${profile.address || 'India'}</span>
+                <span><i class="fas fa-clock"></i> Responds in ${profile.responseTime} mins</span>
+                <span><i class="fas fa-phone" style="color: var(--secondary-orange);"></i> Call Pro: <strong>${p.phone || '9876543210'}</strong></span>
+              </div>
+            </div>
+
+            <!-- Pricing, Rating, Recommendation Score -->
+            <div class="provider-action-area">
+              <div class="provider-pricing">
+                <span>Starting From</span>
+                <span>₹${profile.startingPrice}</span>
+              </div>
+
+              <div class="provider-stat-ratings">
+                <span class="provider-rating-number">${profile.rating}</span>
+                <span class="provider-rating-stars">${Array(Math.floor(profile.rating)).fill('<i class="fas fa-star"></i>').join('')}</span>
+                <span class="provider-completed-jobs-text">(${profile.completedJobs} Jobs)</span>
+              </div>
+
+              <!-- Recommendation badge with transparent breakdown tooltip -->
+              <div class="recommendation-score-badge">
+                <span class="score-val">${p.recommendationScore}</span>
+                <span class="score-label">Rec. Score</span>
+                
+                <!-- Hover Breakdown -->
+                <div class="score-breakdown-tooltip">
+                  <div class="tooltip-title"><i class="fas fa-circle-nodes"></i> Recommendation Math</div>
+                  <div class="tooltip-row"><span>40% Customer Rating:</span> <span>${bd.ratingScore}/40</span></div>
+                  <div class="tooltip-row"><span>30% Completed Jobs:</span> <span>${bd.jobsScore}/30</span></div>
+                  <div class="tooltip-row"><span>15% Response Speed:</span> <span>${bd.responseScore}/15</span></div>
+                  <div class="tooltip-row"><span>10% Repeat Bookings:</span> <span>${bd.repeatScore}/10</span></div>
+                  <div class="tooltip-row"><span>5% Profile Setup:</span> <span>${bd.completenessScore}/5</span></div>
+                  <div class="tooltip-row" style="border-top:1.5px solid rgba(255,255,255,0.15); margin-top:6px; padding-top:4px; font-weight:700; color:var(--accent-gold);">
+                    <span>Total Weight:</span> <span>${p.recommendationScore}/100</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="provider-actions" style="margin-top: auto;">
+                <button onclick="viewProfile('${p._id}')" class="btn btn-outline btn-sm" style="width: 100%;">View Profile</button>
+                <button onclick="bookProvider('${p._id}')" class="btn btn-primary btn-sm" style="width: 100%;">Book Now</button>
+              </div>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Modal view profile
+    async function viewProfile(id) {
+      const modal = document.getElementById('profile-modal');
+      const content = document.getElementById('modal-profile-content');
+      
+      content.innerHTML = `<div style="text-align:center; padding: 40px;"><i class="fas fa-spinner fa-spin fa-2x"></i></div>`;
+      modal.style.display = 'flex';
+
+      try {
+        const p = await API.request(`/api/providers/${id}`);
+        const profile = p.providerProfile || {};
+        const initials = p.name.split(' ').map(n=>n[0]).join('').toUpperCase();
+
+        const reviewsHtml = p.reviews && p.reviews.length > 0 ? p.reviews.map(r => {
+          const customerName = (r.customer && r.customer.name) ? r.customer.name : 'Verified Customer';
+          const initials = customerName.split(' ').map(n=>n[0]).join('').toUpperCase();
+          const formattedDate = new Date(r.createdAt).toLocaleDateString('en-IN', { year:'numeric', month:'short', day:'numeric' });
+
+          let imageHtml = '';
+          if (r.workPicture) {
+            imageHtml = `
+              <div style="margin-top:10px; padding-left:44px;">
+                <div style="font-size:10px; color:var(--text-muted); margin-bottom:4px; font-weight:700;"><i class="fas fa-camera"></i> VERIFIED SERVICE WORK PHOTO:</div>
+                <img src="${r.workPicture}" alt="Completed Work Photo" style="max-width:160px; max-height:160px; border-radius:6px; border:1px solid var(--border-color); box-shadow:var(--shadow-sm); transition:transform 0.2s; cursor:pointer;" onclick="window.open(this.src, '_blank')" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+              </div>
+            `;
+          }
+
+          return `
+            <div class="review-item">
+              <div class="review-header">
+                <div class="review-meta">
+                  <div class="review-customer-initials">${initials}</div>
+                  <div>
+                    <div class="review-author" style="display:flex; align-items:center; gap:6px;">
+                      ${customerName}
+                      <span style="color: var(--success-green); font-size: 10px; font-weight: 700; background-color: rgba(16,185,129,0.06); padding: 1px 5px; border-radius: 4px; display: inline-flex; align-items: center; gap: 2px;"><i class="fas fa-shield-check"></i> Verified Review</span>
+                    </div>
+                    <div class="review-date">${formattedDate}</div>
+                  </div>
+                </div>
+                <div class="review-stars">
+                  ${Array(r.rating).fill('<i class="fas fa-star"></i>').join('')}
+                  ${Array(5 - r.rating).fill('<i class="far fa-star"></i>').join('')}
+                </div>
+              </div>
+              <div class="review-comment" style="padding-left: 44px; margin-top:8px;">"${r.comment}"</div>
+              ${imageHtml}
+            </div>
+          `;
+        }).join('') : `<div style="color:var(--text-muted); text-align:center; padding: 20px;">No reviews submitted yet. Be the first customer to leave feedback!</div>`;
+
+        content.innerHTML = `
+          <div style="display:flex; gap:24px; align-items:center; margin-bottom: 24px; border-bottom:1px solid var(--border-color); padding-bottom:20px;">
+            <div class="provider-avatar" style="width:72px; height:72px; font-size:24px;">${initials}</div>
+            <div>
+              <h2 style="font-size: 24px; font-weight:800;">${p.name}</h2>
+              <p style="color:var(--secondary-orange); font-weight:600;">${profile.subCategory} Professional</p>
+              <p style="font-size:12px; color:var(--text-muted);"><i class="fas fa-briefcase"></i> ${profile.experience} Years of experience | Location: ${profile.address} | <i class="fas fa-phone" style="color:var(--secondary-orange);"></i> Mobile: <strong>${p.phone || '9876543210'}</strong></p>
+            </div>
+          </div>
+
+          <h3 style="font-size:16px; font-weight:700; margin-bottom:10px;">About the Professional</h3>
+          <p style="font-size:14px; color:var(--primary-navy-light); margin-bottom:24px;">"${profile.bio || 'Professional services provider committed to delivering quality support and satisfaction on BharatServe.'}"</p>
+
+          <h3 style="font-size:16px; font-weight:700; margin-bottom:16px; border-top:1px solid var(--border-color); padding-top:20px;">Verified Customer Reviews</h3>
+          <div class="reviews-feed" style="max-height: 250px; overflow-y:auto; padding-right:10px;">
+            ${reviewsHtml}
+          </div>
+
+          <div style="margin-top:24px; display:flex; justify-content:flex-end; gap:12px;">
+            <button onclick="closeProfileModal()" class="btn btn-outline">Close</button>
+            <button onclick="bookProvider('${p._id}')" class="btn btn-primary">Proceed to Booking</button>
+          </div>
+        `;
+
+      } catch (err) {
+        console.error('Error loading provider details modal:', err);
+        content.innerHTML = `<div style="color:var(--error-red); text-align:center; padding:20px;">Failed to load profile.</div>`;
+      }
+    }
+
+    window.closeProfileModal = function() {
+      document.getElementById('profile-modal').style.display = 'none';
+    };
+
+    window.bookProvider = function(id) {
+      window.location.href = `booking.html?providerId=${id}`;
+    };
+  </script>
+</body>
+</html>

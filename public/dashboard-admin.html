@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Control Centre - BharatServe</title>
+  <link rel="icon" type="image/png" href="img/DP.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      text-align: left;
+    }
+    th, td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    th {
+      background-color: var(--bg-soft-gray);
+      color: var(--primary-navy);
+      font-weight: 700;
+    }
+    tr:hover {
+      background-color: rgba(15, 23, 42, 0.01);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Offline / Mock Mode Banner -->
+  <div id="offline-banner" class="offline-banner"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">B</div>
+        Bharat<span>Serve</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-item">Home</a></li>
+        <li><a href="index.html#services" class="nav-item">Services</a></li>
+        <li><a href="index.html#trust" class="nav-item">Why Us</a></li>
+        <li><a href="index.html#reviews" class="nav-item">Testimonials</a></li>
+      </ul>
+      <div class="nav-auth" id="nav-auth">
+        <!-- Managed by auth.js -->
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard Container -->
+  <main class="container" style="padding-bottom: 80px;">
+    <div class="dashboard-layout">
+      
+      <!-- Sidebar Navigation -->
+      <aside class="dashboard-sidebar">
+        <div class="db-profile-card">
+          <div class="db-avatar" id="admin-avatar"><i class="fas fa-lock"></i></div>
+          <div class="db-name" id="admin-name">System Admin</div>
+          <div class="db-role">Central Command</div>
+        </div>
+        <ul class="db-menu">
+          <li class="db-menu-item active" onclick="switchTab('analytics')">
+            <i class="fas fa-chart-line"></i> Analytics & Reports
+          </li>
+          <li class="db-menu-item" onclick="switchTab('customers')">
+            <i class="fas fa-users"></i> Manage Customers
+          </li>
+          <li class="db-menu-item" onclick="switchTab('professionals')">
+            <i class="fas fa-user-shield"></i> Verify Professionals
+          </li>
+          <li class="db-menu-item" onclick="switchTab('bookings')">
+            <i class="fas fa-receipt"></i> System Bookings
+          </li>
+          <li class="db-menu-item" onclick="switchTab('reviews')">
+            <i class="fas fa-star-half-stroke"></i> Customer Reviews
+          </li>
+          <li class="db-menu-item" onclick="switchTab('profile')">
+            <i class="fas fa-user-gear"></i> Admin Profile
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Dashboard Main Area -->
+      <div class="dashboard-content">
+        
+        <!-- Dynamic Panels -->
+        <!-- Panel 1: Analytics -->
+        <div id="panel-analytics">
+          <div class="db-stats-grid" style="margin-bottom: 30px;">
+            <div class="db-stat-card">
+              <div class="db-stat-icon stat-navy"><i class="fas fa-money-bill-trend-up"></i></div>
+              <div class="db-stat-info">
+                <h4 id="admin-stat-revenue">₹0</h4>
+                <p>System Revenue</p>
+              </div>
+            </div>
+            <div class="db-stat-card">
+              <div class="db-stat-icon stat-green"><i class="fas fa-building-columns"></i></div>
+              <div class="db-stat-info">
+                <h4 id="admin-stat-earnings">₹0</h4>
+                <p>Platform Fee (15%)</p>
+              </div>
+            </div>
+            <div class="db-stat-card">
+              <div class="db-stat-icon stat-orange"><i class="fas fa-receipt"></i></div>
+              <div class="db-stat-info">
+                <h4 id="admin-stat-bookings">0</h4>
+                <p>Total Bookings</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="db-stats-grid" style="margin-bottom: 30px;">
+            <div class="db-stat-card">
+              <div class="db-stat-icon stat-gold"><i class="fas fa-users-gear"></i></div>
+              <div class="db-stat-info">
+                <h4 id="admin-stat-customers">0</h4>
+                <p>Registered Clients</p>
+              </div>
+            </div>
+            <div class="db-stat-card">
+              <div class="db-stat-icon stat-navy"><i class="fas fa-user-tie"></i></div>
+              <div class="db-stat-info">
+                <h4 id="admin-stat-providers">0</h4>
+                <p>Service Professionals</p>
+              </div>
+            </div>
+            <div class="db-stat-card">
+              <div class="db-stat-icon stat-green"><i class="fas fa-square-check"></i></div>
+              <div class="db-stat-info">
+                <h4 id="admin-stat-verified-providers">0</h4>
+                <p>Verified Professionals</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-panel">
+            <h3 class="panel-title" style="margin-bottom:16px;">Booking Distribution by Category</h3>
+            <div id="category-stats-chart" style="display:flex; flex-direction:column; gap:12px;">
+              <!-- Loaded via javascript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 2: Manage Customers -->
+        <div class="card-panel" id="panel-customers" style="display:none;">
+          <div class="panel-header">
+            <h3 class="panel-title">Registered Customers</h3>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Customer Name</th>
+                  <th>Email</th>
+                  <th>Mobile Number</th>
+                  <th>Registered Date</th>
+                  <th>Saved Addresses</th>
+                </tr>
+              </thead>
+              <tbody id="admin-customers-table-body">
+                <!-- Javascript populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Panel 3: Verify Professionals -->
+        <div class="card-panel" id="panel-professionals" style="display:none;">
+          <div class="panel-header">
+            <h3 class="panel-title">Professional Verification Log</h3>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Professional Name</th>
+                  <th>Skill / Category</th>
+                  <th>Experience</th>
+                  <th>Completed Jobs</th>
+                  <th>Current Rating</th>
+                  <th>Verified Status</th>
+                  <th>Background Check</th>
+                </tr>
+              </thead>
+              <tbody id="admin-providers-table-body">
+                <!-- Javascript populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Panel 4: All Bookings -->
+        <div class="card-panel" id="panel-bookings" style="display:none;">
+          <div class="panel-header">
+            <h3 class="panel-title">All System Bookings</h3>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>Client</th>
+                  <th>Service Professional</th>
+                  <th>Job SubCategory</th>
+                  <th>Schedule Date & Time</th>
+                  <th>Grand Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="admin-bookings-table-body">
+                <!-- Javascript populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Panel 5: Customer Reviews -->
+        <div class="card-panel" id="panel-reviews" style="display:none;">
+          <div class="panel-header">
+            <h3 class="panel-title">System-wide Customer Reviews</h3>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>Service Professional</th>
+                  <th>Rating</th>
+                  <th>Comment</th>
+                  <th>Work Picture</th>
+                  <th>Submitted Date</th>
+                </tr>
+              </thead>
+              <tbody id="admin-reviews-table-body">
+                <!-- Javascript populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Panel 6: Admin Profile Settings -->
+        <div class="card-panel" id="panel-profile" style="display:none;">
+          <div class="panel-header">
+            <h3 class="panel-title">Admin Account Settings</h3>
+          </div>
+          
+          <div id="admin-profile-success" class="status-indicator status-completed" style="display:none; margin-bottom:20px; text-transform:none;">
+            <i class="fas fa-check-circle"></i> Profile updated successfully!
+          </div>
+
+          <form id="admin-profile-form">
+            <div class="form-group">
+              <label class="form-label" for="edit-admin-name">Admin Name</label>
+              <input type="text" id="edit-admin-name" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="edit-admin-phone">Contact Number</label>
+              <input type="tel" id="edit-admin-phone" class="form-control" pattern="[0-9]{10}" placeholder="10-digit mobile number" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="edit-admin-avatar-file">Admin Profile Photo</label>
+              <input type="file" id="edit-admin-avatar-file" class="form-control" accept="image/*" style="padding:6px;">
+              <span style="font-size:11px; color:var(--text-muted); display:block; margin-top:4px;">Upload a profile picture for your administrator username.</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-sm" style="margin-top:10px;">Save Admin Profile</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-bottom" style="padding-top: 0; border-top: none;">
+      <p>&copy; 2026 BharatServe Control Centre. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js?v=2"></script>
+  <script src="js/auth.js?v=2"></script>
+  <script src="js/dashboard.js?v=2"></script>
+</body>
+</html>

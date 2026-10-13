@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Dashboard - BharatServe</title>
+  <link rel="icon" type="image/png" href="img/DP.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Offline / Mock Mode Banner -->
+  <div id="offline-banner" class="offline-banner"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">B</div>
+        Bharat<span>Serve</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-item">Home</a></li>
+        <li><a href="index.html#services" class="nav-item">Services</a></li>
+        <li><a href="index.html#trust" class="nav-item">Why Us</a></li>
+        <li><a href="index.html#reviews" class="nav-item">Testimonials</a></li>
+      </ul>
+      <div class="nav-auth" id="nav-auth">
+        <!-- Managed by auth.js -->
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard Container -->
+  <main class="container" style="padding-bottom: 80px;">
+    <div class="dashboard-layout">
+      
+      <!-- Sidebar Navigation -->
+      <aside class="dashboard-sidebar">
+        <div class="db-profile-card">
+          <div class="db-avatar" id="cust-avatar">C</div>
+          <div class="db-name" id="cust-name">Loading...</div>
+          <div class="db-role">Customer Account</div>
+        </div>
+        <ul class="db-menu">
+          <li class="db-menu-item active" onclick="switchTab('bookings')">
+            <i class="fas fa-calendar-check"></i> Bookings & Status
+          </li>
+          <li class="db-menu-item" onclick="switchTab('addresses')">
+            <i class="fas fa-map-location-dot"></i> Manage Addresses
+          </li>
+          <li class="db-menu-item" onclick="switchTab('favorites')">
+            <i class="fas fa-heart"></i> Saved Favorites
+          </li>
+          <li class="db-menu-item" onclick="switchTab('support')">
+            <i class="fas fa-headset"></i> Customer Helpdesk
+          </li>
+          <li class="db-menu-item" onclick="switchTab('profile')">
+            <i class="fas fa-user-gear"></i> Edit Profile
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Dashboard Main Area -->
+      <div class="dashboard-content">
+        
+        <!-- Metrics Summary -->
+        <div class="db-stats-grid">
+          <div class="db-stat-card">
+            <div class="db-stat-icon stat-navy"><i class="fas fa-list-check"></i></div>
+            <div class="db-stat-info">
+              <h4 id="stat-total-bookings">0</h4>
+              <p>Total Bookings</p>
+            </div>
+          </div>
+          <div class="db-stat-card">
+            <div class="db-stat-icon stat-orange"><i class="fas fa-clock"></i></div>
+            <div class="db-stat-info">
+              <h4 id="stat-active-bookings">0</h4>
+              <p>Active Slots</p>
+            </div>
+          </div>
+          <div class="db-stat-card">
+            <div class="db-stat-icon stat-green"><i class="fas fa-circle-check"></i></div>
+            <div class="db-stat-info">
+              <h4 id="stat-completed-bookings">0</h4>
+              <p>Completed Jobs</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Panels -->
+        <!-- Panel 1: Bookings List -->
+        <div class="card-panel" id="panel-bookings">
+          <div class="panel-header">
+            <h3 class="panel-title">My Bookings</h3>
+          </div>
+          <div class="db-booking-list" id="customer-bookings-list">
+            <!-- Populated via javascript -->
+            <div style="text-align:center; padding: 40px; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Loading bookings...</div>
+          </div>
+        </div>
+
+        <!-- Panel 2: Manage Addresses -->
+        <div class="card-panel" id="panel-addresses" style="display:none;">
+          <div class="panel-header">
+            <h3 class="panel-title">My Addresses</h3>
+          </div>
+          <div id="addresses-container" style="display:grid; grid-template-columns:1fr; gap:16px; margin-bottom: 24px;">
+            <!-- Rendered list of saved addresses -->
+          </div>
+          <form id="add-address-form" style="border-top:1px solid var(--border-color); padding-top:20px;">
+            <h4 style="font-size:15px; font-weight:700; margin-bottom:12px;">Add New Address</h4>
+            <div class="form-group">
+              <textarea id="new-address-input" class="form-control" rows="2" placeholder="Enter complete address..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Add Address</button>
+          </form>
+        </div>
+
+        <!-- Panel 3: Favorites -->
+        <div class="card-panel" id="panel-favorites" style="display:none;">
+          <div class="panel-header">
+            <h3 class="panel-title">Saved Professionals</h3>
+          </div>
+          <div id="favorites-container" class="providers-list">
+            <!-- Favorites load here -->
+          </div>
+        </div>
+
+        <!-- Panel 4: Help & Support -->
+        <div class="card-panel" id="panel-support" style="display:none;">
+          <div class="panel-header">
+            <h3 class="panel-title">BharatServe Trust Helpline</h3>
+          </div>
+          <p style="font-size:14px; margin-bottom:20px;">Need help with a technician or booking dispute? Contact our dedicated safety support desk. We respond within 30 minutes.</p>
+          <div class="trust-grid" style="grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="trust-card" style="padding:20px; text-align:left;">
+              <div class="trust-icon" style="width:40px; height:40px; font-size:16px; margin-bottom:12px;"><i class="fas fa-phone"></i></div>
+              <h4 style="font-size:16px; margin-bottom:4px;">Call Helpline</h4>
+              <p style="font-size:13px; color:var(--text-muted);">+91 1800-SERV-INDIA</p>
+            </div>
+            <div class="trust-card" style="padding:20px; text-align:left;">
+              <div class="trust-icon" style="width:40px; height:40px; font-size:16px; margin-bottom:12px;"><i class="fas fa-envelope"></i></div>
+              <h4 style="font-size:16px; margin-bottom:4px;">Email Dispute Desk</h4>
+              <p style="font-size:13px; color:var(--text-muted);">safety@BharatServe.com</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 5: Edit Profile -->
+        <div class="card-panel" id="panel-profile" style="display:none;">
+          <div class="panel-header">
+            <h3 class="panel-title">Profile Settings</h3>
+          </div>
+          
+          <div id="profile-success" class="status-indicator status-completed" style="display:none; margin-bottom:20px; text-transform:none;">
+            <i class="fas fa-check-circle"></i> Profile updated successfully!
+          </div>
+
+          <form id="customer-profile-form">
+            <div class="form-group">
+              <label class="form-label" for="edit-cust-name">Full Name</label>
+              <input type="text" id="edit-cust-name" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="edit-cust-phone">Mobile Number</label>
+              <input type="tel" id="edit-cust-phone" class="form-control" pattern="[0-9]{10}" placeholder="10-digit mobile number" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="edit-cust-avatar-file">Upload Profile Picture</label>
+              <input type="file" id="edit-cust-avatar-file" class="form-control" accept="image/*" style="padding:6px;">
+              <span style="font-size:11px; color:var(--text-muted); display:block; margin-top:4px;">Upload a photo to use as your profile avatar.</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-sm" style="margin-top:10px;">Update Profile</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Submit Review Modal -->
+  <div class="modal-overlay" id="review-modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeReviewModal()"><i class="fas fa-xmark"></i></button>
+      <h3 style="font-size: 20px; font-weight:800; margin-bottom: 8px;">Leave a Verified Review</h3>
+      <p style="color:var(--text-muted); font-size:13px;">Your review helps other users find reliable service professionals.</p>
+      
+      <div id="review-modal-error" class="auth-error" style="margin-top: 12px; display:none;">
+        <i class="fas fa-triangle-exclamation"></i> <span>Submission failed.</span>
+      </div>
+
+      <div style="background-color:rgba(16,185,129,0.05); border:1px solid rgba(16,185,129,0.2); border-radius:8px; padding:12px; font-size:12px; color:var(--text-dark); margin-top:10px; line-height:1.4; margin-bottom:12px;">
+        <i class="fas fa-shield-halved" style="color:var(--success-green);"></i> <strong>Bot Protection Shield:</strong> Ratings are verified against completed bookings. Anonymous bots and spam are automatically crossover-blocked.
+      </div>
+
+      <form id="review-form">
+        <input type="hidden" id="review-booking-id">
+        
+        <div class="form-group" style="margin-top:20px;">
+          <label class="form-label" style="margin-bottom:0;">Service Rating</label>
+          <div class="star-selector" id="star-selector">
+            <i class="far fa-star" data-rating="1"></i>
+            <i class="far fa-star" data-rating="2"></i>
+            <i class="far fa-star" data-rating="3"></i>
+            <i class="far fa-star" data-rating="4"></i>
+            <i class="far fa-star" data-rating="5"></i>
+          </div>
+          <input type="hidden" id="review-rating" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="review-comment">Review Description</label>
+          <textarea id="review-comment" class="form-control" rows="4" placeholder="Excellent service. Arrived on time and fixed the issue professionally..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="review-image">Upload Work Picture (Optional)</label>
+          <input type="file" id="review-image" class="form-control" accept="image/*" style="padding: 6px;">
+          <span style="font-size:11px; color:var(--text-muted); display:block; margin-top:4px;">Add a photo of the completed service work to support your rating.</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:10px;">
+          Submit Verified Review <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Invoices Modal -->
+  <div class="modal-overlay" id="invoice-modal">
+    <div class="modal-content" style="max-width:550px; padding: 40px; font-family: var(--font-body);">
+      <button class="modal-close" onclick="closeInvoiceModal()"><i class="fas fa-xmark"></i></button>
+      <div id="invoice-modal-content">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js?v=2"></script>
+  <script src="js/auth.js?v=2"></script>
+  <script src="js/dashboard.js?v=2"></script>
+</body>
+</html>

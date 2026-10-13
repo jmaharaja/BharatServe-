@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - BharatServe</title>
+  <link rel="icon" type="image/png" href="img/DP.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .auth-page {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px;
+      min-height: calc(100vh - 160px);
+      background: radial-gradient(circle at 10% 20%, rgba(249, 115, 22, 0.03) 0%, rgba(15, 23, 42, 0.03) 100%);
+    }
+    .auth-card {
+      background-color: var(--bg-white);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-lg);
+      padding: 40px;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: var(--shadow-premium);
+    }
+    .auth-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .auth-header h2 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .auth-error {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: var(--error-red);
+      padding: 12px;
+      border-radius: var(--border-radius-sm);
+      margin-bottom: 20px;
+      font-size: 14px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">B</div>
+        Bharat<span>Serve</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-item">Home</a></li>
+        <li><a href="index.html#services" class="nav-item">Services</a></li>
+        <li><a href="index.html#trust" class="nav-item">Why Us</a></li>
+        <li><a href="index.html#reviews" class="nav-item">Testimonials</a></li>
+      </ul>
+      <div class="nav-auth">
+        <a href="register.html" class="btn btn-outline btn-sm">Sign Up</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Login Area -->
+  <main class="auth-page">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h2>Welcome Back</h2>
+        <p style="color: var(--text-muted); font-size: 14px;">Sign in to access your bookings and dashboard</p>
+      </div>
+
+      <div id="auth-error" class="auth-error">
+        <i class="fas fa-triangle-exclamation"></i>
+        <span id="error-message">Invalid credentials.</span>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email Address</label>
+          <input type="email" id="login-email" class="form-control" placeholder="name@example.com" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <label class="form-label" for="login-password" style="margin-bottom: 0;">Password</label>
+            <a href="#" class="btn-link" style="font-size: 12px;">Forgot password?</a>
+          </div>
+          <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 20px;">
+          Sign In <i class="fas fa-right-to-bracket"></i>
+        </button>
+      </form>
+
+      <div style="text-align: center; font-size: 14px; color: var(--text-muted); margin-bottom: 24px;">
+        Don't have an account? <a href="register.html" class="btn-link">Create Account</a>
+      </div>
+
+      <!-- Demo Credentials Helper -->
+      <div style="padding: 16px; border-radius: 8px; background-color: var(--bg-soft-gray); font-size: 13px; border: 1px solid var(--border-color); text-align: left;">
+        <strong style="color: var(--primary-navy); display: block; margin-bottom: 10px;"><i class="fas fa-shield-halved" style="color: var(--secondary-orange);"></i> Live Mock Credentials:</strong>
+        <div style="display: flex; flex-direction: column; gap: 8px; line-height: 1.5;">
+          <div>
+            <span style="background-color: var(--primary-navy); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; margin-right: 6px; display: inline-block; width: 75px; text-align: center;">CUSTOMER</span>
+            <code>amit@gmail.com</code> / <code>BharatServe@2026!</code>
+          </div>
+          <div>
+            <span style="background-color: var(--secondary-orange); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; margin-right: 6px; display: inline-block; width: 75px; text-align: center;">PROVIDER</span>
+            <code>ramesh.plumber@gmail.com</code> / <code>BharatServe@2026!</code>
+          </div>
+          <div>
+            <span style="background-color: #64748b; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; margin-right: 6px; display: inline-block; width: 75px; text-align: center;">ADMIN</span>
+            <code>admin@BharatServe.com</code> / <code>BharatServe@2026!</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="padding: 40px 0 20px 0; border-top: none;">
+    <div class="container footer-bottom" style="padding-top: 0; border-top: none;">
+      <p>&copy; 2026 BharatServe Private Limited. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js?v=2"></script>
+  <script src="js/auth.js?v=2"></script>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const errorDiv = document.getElementById('auth-error');
+      const errorMessage = document.getElementById('error-message');
+
+      errorDiv.style.display = 'none';
+
+      try {
+        const user = await Auth.login(email, password);
+        
+        // Check redirect query
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect');
+        
+        if (redirect) {
+          window.location.href = decodeURIComponent(redirect);
+        } else {
+          // Direct to appropriate dashboard
+          if (user.role === 'customer') window.location.href = 'dashboard-customer.html';
+          if (user.role === 'provider') window.location.href = 'dashboard-provider.html';
+          if (user.role === 'admin') window.location.href = 'dashboard-admin.html';
+        }
+      } catch (err) {
+        errorDiv.style.display = 'flex';
+        errorMessage.innerText = err.error || err.message || (typeof err === 'string' ? err : JSON.stringify(err)) || 'Login failed. Please check your credentials.';
+      }
+    });
+  </script>
+</body>
+</html>

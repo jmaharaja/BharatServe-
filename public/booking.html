@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Service - BharatServe</title>
+  <link rel="icon" type="image/png" href="img/DP.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .credit-card-fields {
+      display: none;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--border-color);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Offline / Mock Mode Banner -->
+  <div id="offline-banner" class="offline-banner"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">B</div>
+        Bharat<span>Serve</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-item">Home</a></li>
+        <li><a href="index.html#services" class="nav-item">Services</a></li>
+        <li><a href="index.html#trust" class="nav-item">Why Us</a></li>
+        <li><a href="index.html#reviews" class="nav-item">Testimonials</a></li>
+      </ul>
+      <div class="nav-auth" id="nav-auth">
+        <span style="color: var(--text-muted); font-size: 14px;"><i class="fas fa-spinner fa-spin"></i> Loading...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Booking Layout -->
+  <main class="container" style="padding-bottom: 80px;">
+    <div class="booking-grid">
+      
+      <!-- Checkout Form panel -->
+      <section class="booking-panel">
+        <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 24px;">Configure Your Booking</h2>
+        
+        <div id="booking-error" class="auth-error" style="margin-bottom: 20px; display:none;">
+          <i class="fas fa-triangle-exclamation"></i> <span id="error-text">Failed to book.</span>
+        </div>
+
+        <form id="booking-form">
+          <!-- Step 1: Date & Time -->
+          <div class="booking-section">
+            <h3 class="booking-section-title"><i class="fas fa-calendar-days"></i> Step 1: Select Date & Time</h3>
+            <div class="form-group">
+              <label class="form-label" for="book-date">Service Date</label>
+              <div style="position: relative;">
+                <input type="date" id="book-date" class="form-control" style="padding-left: 36px;" required>
+                <i class="far fa-calendar-alt" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; font-size: 16px;"></i>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Available Time Slots <span style="font-weight: normal; color: var(--text-muted); font-size: 12px;">(Optional)</span></label>
+              <div class="slots-grid" id="slots-grid">
+                <div class="slot-item" data-slot="09:00 AM - 12:00 PM">09:00 AM - Noon</div>
+                <div class="slot-item" data-slot="12:00 PM - 03:00 PM">12:00 PM - 3:00 PM</div>
+                <div class="slot-item" data-slot="03:00 PM - 06:00 PM">3:00 PM - 6:00 PM</div>
+                <div class="slot-item" data-slot="06:00 PM - 09:00 PM">6:00 PM - 9:00 PM</div>
+              </div>
+              <input type="hidden" id="book-time-slot">
+            </div>
+          </div>
+
+          <!-- Step 2: Address -->
+          <div class="booking-section">
+            <h3 class="booking-section-title"><i class="fas fa-location-dot"></i> Step 2: Service Location</h3>
+            <div class="form-group">
+              <label class="form-label" for="book-address">Address Details</label>
+              <textarea id="book-address" class="form-control" rows="3" placeholder="Enter complete flat number, street name, landmark, and pincode..." required></textarea>
+              <button type="button" class="btn btn-outline btn-sm" id="btn-open-map" style="display:inline-flex; align-items:center; gap:6px; margin-top:8px;">
+                <i class="fas fa-map-marked-alt"></i> Locate on Map
+              </button>
+              <div id="saved-addresses" style="margin-top: 8px; font-size: 13px; color: var(--text-muted); cursor:pointer;">
+                <!-- Filled via js -->
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Step 3: Payment Options -->
+          <div class="booking-section">
+            <h3 class="booking-section-title"><i class="fas fa-credit-card"></i> Step 3: Payment Method</h3>
+            <div class="payment-options">
+              
+              <!-- Cash Card -->
+              <div class="payment-option-card selected">
+                <input type="radio" name="payment-method-radio" id="pay-cash" checked>
+                <div class="payment-option-info">
+                  <h4>Cash / Pay on Service Completion</h4>
+                  <p>Pay the professional directly in cash or UPI once the job is completed.</p>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%; margin-top:20px;">
+            <i class="fas fa-shield-check"></i> Complete & Confirm Booking
+          </button>
+        </form>
+      </section>
+
+      <!-- Booking Summary column -->
+      <aside class="booking-summary-panel" id="summary-panel">
+        <h3 style="font-size: 18px; font-weight:700; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">Booking Summary</h3>
+        <div id="summary-provider-details">
+          <!-- Dynamically loaded -->
+          <div style="text-align:center; padding: 20px;"><i class="fas fa-spinner fa-spin"></i></div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-bottom" style="padding-top: 0; border-top: none;">
+      <p>&copy; 2026 BharatServe Private Limited. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/api.js?v=2"></script>
+  <script src="js/auth.js?v=2"></script>
+  <script>
+    // Guard route: only customers can book
+    Auth.protectPage('customer');
+
+    let provider = null;
+    let selectedPayment = 'cash';
+    let totalAmount = 0;
+
+    // Set date input min as today
+    const dateInput = document.getElementById('book-date');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.min = today;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Wait for API to resolve mode
+      if (API.isMockMode === undefined) {
+        await API.init();
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const providerId = urlParams.get('providerId');
+
+      if (!providerId) {
+        alert('Invalid Booking: No professional selected.');
+        window.location.href = 'provider-listing.html';
+        return;
+      }
+
+      await loadProviderDetails(providerId);
+      loadSavedAddresses();
+      initTimeSlotSelector();
+    });
+
+    async function loadProviderDetails(id) {
+      try {
+        provider = await API.request(`/api/providers/${id}`);
+        const profile = provider.providerProfile || {};
+        const initials = provider.name.split(' ').map(n=>n[0]).join('').toUpperCase();
+
+        const basePrice = profile.startingPrice || 299;
+        const fee = 49;
+        const tax = Math.round(basePrice * 0.05); // 5% tax
+        totalAmount = basePrice + fee + tax;
+
+        const summaryDiv = document.getElementById('summary-provider-details');
+        summaryDiv.innerHTML = `
+          <div style="display:flex; gap:16px; align-items:center; margin-bottom: 20px; border-bottom:1px solid var(--border-color); padding-bottom:16px;">
+            <div class="provider-avatar" style="width:48px; height:48px; font-size:18px;">${initials}</div>
+            <div>
+              <h4 style="font-weight:700;">${provider.name}</h4>
+              <p style="font-size:12px; color:var(--secondary-orange); font-weight:600;">${profile.subCategory} Pro</p>
+              <div style="font-size:12px; color:var(--text-muted);"><i class="fas fa-star" style="color:var(--accent-gold)"></i> ${profile.rating} (${profile.completedJobs} Jobs)</div>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:12px; font-size:14px; margin-bottom:20px; border-bottom:1px solid var(--border-color); padding-bottom:16px;">
+            <div style="display:flex; justify-content:space-between;">
+              <span style="color:var(--text-muted);">Base Service Charge</span>
+              <span>₹${basePrice}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span style="color:var(--text-muted);">Safety & Booking Fee</span>
+              <span>₹${fee}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span style="color:var(--text-muted);">Taxes & Platform GST</span>
+              <span>₹${tax}</span>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; font-weight:800; font-size:18px; color:var(--primary-navy);">
+            <span>Total Payable</span>
+            <span>₹${totalAmount}</span>
+          </div>
+
+          <div style="margin-top:12px; background-color:rgba(249, 115, 22, 0.05); border:1px solid rgba(249, 115, 22, 0.2); border-radius:8px; padding:12px; font-size:12px; color:var(--text-dark); line-height:1.4;">
+            <i class="fas fa-circle-check" style="color:var(--secondary-orange);"></i> <strong>Direct Choice Booking:</strong> You have chosen <strong>${provider.name}</strong> to perform your service. BharatServe does not auto-allocate technicians.
+          </div>
+          <div style="margin-top:12px; background-color:var(--bg-soft-gray); border-radius:8px; padding:12px; font-size:12px; color:var(--text-muted); line-height:1.4;">
+            <i class="fas fa-circle-info" style="color:var(--secondary-orange);"></i> BharatServe Escrow Guarantee ensures payment is only disbursed to the technician upon successful completion.
+          </div>
+        `;
+      } catch (err) {
+        console.error('Error fetching provider summary:', err);
+        alert('Could not retrieve service professional specifications.');
+      }
+    }
+
+    async function loadSavedAddresses() {
+      const user = await Auth.getCurrentUser();
+      const addrBox = document.getElementById('saved-addresses');
+      if (user && user.addresses && user.addresses.length > 0) {
+        const primary = user.addresses[0];
+        addrBox.innerHTML = `<i class="fas fa-circle-dot" style="color:var(--success-green);"></i> Set primary address: <strong>${primary.slice(0, 45)}...</strong> (Click to autofill)`;
+        addrBox.addEventListener('click', () => {
+          document.getElementById('book-address').value = primary;
+        });
+      } else {
+        addrBox.innerHTML = `<i class="fas fa-circle-exclamation"></i> No saved addresses found. Complete checkout to save address.`;
+      }
+    }
+
+    function initTimeSlotSelector() {
+      const slots = document.querySelectorAll('.slot-item');
+      const hiddenInput = document.getElementById('book-time-slot');
+
+      slots.forEach(slot => {
+        slot.addEventListener('click', () => {
+          slots.forEach(s => s.classList.remove('selected'));
+          slot.classList.add('selected');
+          hiddenInput.value = slot.getAttribute('data-slot');
+        });
+      });
+    }
+
+
+    document.getElementById('booking-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const bookingDate = document.getElementById('book-date').value;
+      const bookingTimeSlot = document.getElementById('book-time-slot').value || "Flexible / Anytime";
+      const address = document.getElementById('book-address').value;
+      const message = "";
+
+      const errorDiv = document.getElementById('booking-error');
+      const errorText = document.getElementById('error-text');
+      errorDiv.style.display = 'none';
+
+      try {
+        const user = await Auth.getCurrentUser();
+        // Save address to profile if it doesn't already exist
+        if (user && !user.addresses.includes(address)) {
+          user.addresses.push(address);
+          await API.request('/api/auth/profile', {
+            method: 'PUT',
+            body: { addresses: user.addresses }
+          });
+        }
+
+        // Post booking details
+        await API.request('/api/bookings', {
+          method: 'POST',
+          body: {
+            providerId: provider._id,
+            serviceCategory: provider.providerProfile.category,
+            serviceSubCategory: provider.providerProfile.subCategory,
+            bookingDate,
+            bookingTimeSlot,
+            address,
+            message,
+            paymentMethod: selectedPayment,
+            totalAmount
+          }
+        });
+
+        alert('Booking Placed Successfully! Navigating to customer dashboard.');
+        window.location.href = 'dashboard-customer.html';
+
+      } catch (err) {
+        errorDiv.style.display = 'flex';
+        errorText.innerText = err.error || 'Failed to place booking. Please check details.';
+      }
+    });
+
+    // Map Selector Logic
+    let map = null;
+    let marker = null;
+    let selectedCoordsAddress = "";
+
+    const SIMULATED_STREETS = [
+      "12, Anna Salai, near Spencer Plaza, Thousand Lights, Chennai, Tamil Nadu 600002",
+      "56, Cathedral Road, near Music Academy, Gopalapuram, Chennai, Tamil Nadu 600086",
+      "24, MG Road, near Metro Station, Bengaluru, Karnataka 560001",
+      "88, Indiranagar Double Road, behind BDA Complex, Bengaluru, Karnataka 560038",
+      "102, Park Street, near Flurys, Elgin, Kolkata, West Bengal 700016",
+      "15, Connaught Place, Radial Road 3, New Delhi, Delhi 110001",
+      "45, Marine Drive, opposite Promenade, Churchgate, Mumbai, Maharashtra 400020",
+      "77, Gachibowli Main Road, near DLF Cyber City, Hyderabad, Telangana 500032"
+    ];
+
+    function getRandomSimulatedAddress() {
+      const idx = Math.floor(Math.random() * SIMULATED_STREETS.length);
+      return SIMULATED_STREETS[idx];
+    }
+
+    async function reverseGeocode(lat, lng) {
+      document.getElementById('map-selected-address').innerText = "Resolving street address...";
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`, {
+          headers: {
+            'Accept-Language': 'en'
+          }
+        });
+        const data = await res.json();
+        if (data && data.display_name) {
+          selectedCoordsAddress = data.display_name;
+          document.getElementById('map-selected-address').innerText = selectedCoordsAddress;
+        } else {
+          throw new Error();
+        }
+      } catch (err) {
+        selectedCoordsAddress = getRandomSimulatedAddress();
+        document.getElementById('map-selected-address').innerText = selectedCoordsAddress;
+      }
+    }
+
+    document.getElementById('btn-open-map').addEventListener('click', () => {
+      document.getElementById('map-modal').style.display = 'flex';
+      
+      const defaultLat = 13.0827;
+      const defaultLng = 80.2707;
+
+      if (!map) {
+        map = L.map('map-container').setView([defaultLat, defaultLng], 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        marker = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(map);
+        
+        // Load initial location address
+        reverseGeocode(defaultLat, defaultLng);
+
+        marker.on('dragend', function (event) {
+          const position = marker.getLatLng();
+          reverseGeocode(position.lat, position.lng);
+        });
+
+        map.on('click', function (e) {
+          marker.setLatLng(e.latlng);
+          reverseGeocode(e.latlng.lat, e.latlng.lng);
+        });
+      }
+      
+      // Always invalidate size 100ms after display is flex so tiles render correctly
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
+    });
+
+    window.closeMapModal = function() {
+      document.getElementById('map-modal').style.display = 'none';
+    };
+
+    window.confirmMapLocation = function() {
+      if (selectedCoordsAddress) {
+        document.getElementById('book-address').value = selectedCoordsAddress;
+      }
+      closeMapModal();
+    };
+  </script>
+
+  <!-- Map Modal Overlay -->
+  <div class="modal-overlay" id="map-modal" style="display:none; z-index:2000;">
+    <div class="modal-content" style="max-width:600px; padding:24px; border-radius:12px; background:#fff; box-shadow:0 10px 30px rgba(0,0,0,0.15);">
+      <button class="modal-close" onclick="closeMapModal()"><i class="fas fa-xmark"></i></button>
+      <h3 style="font-size: 18px; font-weight:800; margin-bottom: 8px; color:var(--primary-navy);"><i class="fas fa-map-location-dot"></i> Locate service address on Map</h3>
+      <p style="color:var(--text-muted); font-size:13px; margin-bottom:16px;">Drag the red marker or click anywhere on the map to pinpoint your location. The address will auto-fill.</p>
+      
+      <div id="map-container" style="height:320px; border-radius:8px; border:1px solid var(--border-color); background:#eee; position:relative; overflow:hidden;"></div>
+      
+      <div style="margin-top:16px; background-color:rgba(14,165,233,0.06); border:1px solid rgba(14,165,233,0.15); border-radius:8px; padding:12px; font-size:13px;">
+        <strong style="color:var(--secondary-orange);"><i class="fas fa-location-dot"></i> Selected Location:</strong>
+        <div id="map-selected-address" style="margin-top:4px; font-weight:600; color:var(--text-dark);">Pinpoint location on map...</div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px;">
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeMapModal()">Cancel</button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="confirmMapLocation()">Confirm Location</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
